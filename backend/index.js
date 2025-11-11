@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
+const db = require('./db'); // import the database setup
 
 const app = express();
 const PORT = 5000;
