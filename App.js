@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
-import Header from './Header';
-import TaskInput from './TaskInput';
-import TaskList from './TaskList';
-import Footer from './Footer';
+import Header from './components/Header';
+import TaskInput from './components/TaskInput';
+import TaskList from './components/TaskList';
+import Footer from './components/Footer';
 import './styles.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  // Add a new task
   const addTask = (text) => {
-    const newTask = { id: Date.now(), text, completed: false };
-    setTasks([...tasks, newTask]);
+    setTasks([...tasks, { id: Date.now(), text, completed: false }]);
   };
 
-  // Toggle task completion
   const toggleComplete = (id) => {
     setTasks(
-      tasks.map(task => 
+      tasks.map(task =>
         task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
   };
 
-  // Delete a task
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
@@ -35,10 +31,10 @@ function App() {
     <div className="app">
       <Header />
       <TaskInput onAddTask={addTask} />
-      <TaskList 
-        tasks={tasks} 
-        onToggleComplete={toggleComplete} 
-        onDeleteTask={deleteTask} 
+      <TaskList
+        tasks={tasks}
+        onToggleComplete={toggleComplete}
+        onDeleteTask={deleteTask}
       />
       <Footer totalTasks={totalTasks} completedTasks={completedTasks} />
     </div>
