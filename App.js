@@ -3,15 +3,20 @@ import Header from './components/Header';
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import Footer from './components/Footer';
+import Modal from './components/Modal';  // optional
 import './styles.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
+  // Add new task
   const addTask = (text) => {
     setTasks([...tasks, { id: Date.now(), text, completed: false }]);
   };
 
+  // Toggle task complete
   const toggleComplete = (id) => {
     setTasks(
       tasks.map(task =>
@@ -20,8 +25,28 @@ function App() {
     );
   };
 
+  // Delete task
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  // Open edit modal
+  const openEditModal = (task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  // Save edited task
+  const saveTask = (id, newText) => {
+    setTasks(
+      tasks.map(task => (task.id === id ? { ...task, text: newText } : task))
+    );
+    closeModal();
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTask(null);
   };
 
   const totalTasks = tasks.length;
@@ -35,8 +60,19 @@ function App() {
         tasks={tasks}
         onToggleComplete={toggleComplete}
         onDeleteTask={deleteTask}
+        onEditTask={openEditModal}  // optional
       />
       <Footer totalTasks={totalTasks} completedTasks={completedTasks} />
+
+      {/* Modal for editing */}
+      {isModalOpen && selectedTask && (
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <h3>Edit Task</h3>
+          <TaskInput
+            onAddTask={(text) => saveTask(selectedTask.id, text)}
+          />
+        </Modal>
+      )}
     </div>
   );
 }
