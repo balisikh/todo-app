@@ -16,12 +16,12 @@ function TaskInput({ onAddTask }) {
 
   return (
     <div className="task-input">
-      <input
-        type="text"
+      <input 
+        type="text" 
         placeholder="Input Task Here"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={handleEnter}
+        value={inputValue} 
+        onChange={(e) => setInputValue(e.target.value)} 
+        onKeyDown={handleEnter} 
       />
       <button onClick={handleAdd}>Add Task</button>
     </div>

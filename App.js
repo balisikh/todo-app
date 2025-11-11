@@ -3,7 +3,7 @@ import Header from './components/Header';
 import TaskInput from './components/TaskInput';
 import TaskList from './components/TaskList';
 import Footer from './components/Footer';
-import Modal from './components/Modal';  // optional
+import Modal from './components/Modal';
 import './styles.css';
 
 function App() {
@@ -11,18 +11,14 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  // Add new task
+  // Add task
   const addTask = (text) => {
     setTasks([...tasks, { id: Date.now(), text, completed: false }]);
   };
 
-  // Toggle task complete
+  // Toggle complete
   const toggleComplete = (id) => {
-    setTasks(
-      tasks.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+    setTasks(tasks.map(task => task.id === id ? {...task, completed: !task.completed} : task));
   };
 
   // Delete task
@@ -38,9 +34,7 @@ function App() {
 
   // Save edited task
   const saveTask = (id, newText) => {
-    setTasks(
-      tasks.map(task => (task.id === id ? { ...task, text: newText } : task))
-    );
+    setTasks(tasks.map(task => task.id === id ? {...task, text: newText} : task));
     closeModal();
   };
 
@@ -49,22 +43,21 @@ function App() {
     setSelectedTask(null);
   };
 
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(task => task.completed).length;
-
   return (
     <div className="app">
       <Header />
       <TaskInput onAddTask={addTask} />
-      <TaskList
-        tasks={tasks}
-        onToggleComplete={toggleComplete}
-        onDeleteTask={deleteTask}
-        onEditTask={openEditModal}  // optional
+      <TaskList 
+        tasks={tasks} 
+        onToggleComplete={toggleComplete} 
+        onDeleteTask={deleteTask} 
+        onEditTask={openEditModal} 
       />
-      <Footer totalTasks={totalTasks} completedTasks={completedTasks} />
+      <Footer 
+        totalTasks={tasks.length} 
+        completedTasks={tasks.filter(task => task.completed).length} 
+      />
 
-      {/* Modal for editing */}
       {isModalOpen && selectedTask && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <h3>Edit Task</h3>
