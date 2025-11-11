@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Task({ task, onToggleComplete, onDelete }) {
+function Task({ task, onToggleComplete, onDelete, onEditTask }) {
   return (
     <li className="task">
       <input
@@ -11,7 +11,10 @@ function Task({ task, onToggleComplete, onDelete }) {
       <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
         {task.text}
       </span>
-      <button onClick={() => onDelete(task.id)}>Delete</button>
+      <div className="task-buttons">
+        <button onClick={() => onEditTask(task)}>Edit</button>
+        <button onClick={() => onDelete(task.id)}>Delete</button>
+      </div>
     </li>
   );
 }

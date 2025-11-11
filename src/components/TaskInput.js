@@ -11,9 +11,7 @@ function TaskInput({ onAddTask }) {
   };
 
   const handleEnter = (e) => {
-    if (e.key === 'Enter') {
-      handleAdd();
-    }
+    if (e.key === 'Enter') handleAdd();
   };
 
   return (
