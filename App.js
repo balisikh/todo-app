@@ -3,6 +3,7 @@ import Header from './Header';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
 import Footer from './Footer';
+import './styles.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -13,7 +14,7 @@ function App() {
     setTasks([...tasks, newTask]);
   };
 
-  // Toggle completion
+  // Toggle task completion
   const toggleComplete = (id) => {
     setTasks(
       tasks.map(task => 
