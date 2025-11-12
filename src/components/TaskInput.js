@@ -1,30 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-function TaskInput({ onAddTask }) {
-  const [inputValue, setInputValue] = useState('');
+function TaskInput({ addTask }) {
+  const [text, setText] = useState("");
 
-  const handleAdd = () => {
-    if (inputValue.trim() !== '') {
-      onAddTask(inputValue);
-      setInputValue('');
-    }
-  };
-
-  const handleEnter = (e) => {
-    if (e.key === 'Enter') handleAdd();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (text.trim() === "") return;
+    addTask(text.trim());
+    setText("");
   };
 
   return (
-    <div className="task-input">
-      <input 
-        type="text" 
-        placeholder="Input Task Here"
-        value={inputValue} 
-        onChange={(e) => setInputValue(e.target.value)} 
-        onKeyDown={handleEnter} 
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Add a new task"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
       />
-      <button onClick={handleAdd}>Add Task</button>
-    </div>
+      <button type="submit">Add</button>
+    </form>
   );
 }
 
