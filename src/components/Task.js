@@ -5,6 +5,7 @@ function Task({ task, toggleTask, deleteTask }) {
     <li
       style={{
         textDecoration: task.completed ? "line-through" : "none",
+        opacity: task.completed ? 0.6 : 1,
         marginBottom: "10px",
       }}
     >

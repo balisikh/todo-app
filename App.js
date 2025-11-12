@@ -1,71 +1,69 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
-import TaskInput from './components/TaskInput';
-import TaskList from './components/TaskList';
-import Footer from './components/Footer';
-import Modal from './components/Modal';
+import React, { useState, useEffect } from "react";
+import TaskInput from "./components/TaskInput";
+import TaskList from "./components/TaskList";
 import './styles.css';
+
+const API_URL = "http://localhost:5000"; // Change to Render backend URL when deployed
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
 
-  // Add task
-  const addTask = (text) => {
-    setTasks([...tasks, { id: Date.now(), text, completed: false }]);
+  useEffect(() => {
+    async function fetchTasks() {
+      try {
+        const res = await fetch(`${API_URL}/tasks`);
+        const data = await res.json();
+        setTasks(data);
+      } catch (err) {
+        console.error("Error fetching tasks:", err);
+      }
+    }
+    fetchTasks();
+  }, []);
+
+  const addTask = async (text) => {
+    try {
+      const res = await fetch(`${API_URL}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const newTask = await res.json();
+      setTasks((prev) => [newTask, ...prev]);
+    } catch (err) {
+      console.error("Error adding task:", err);
+    }
   };
 
-  // Toggle complete
-  const toggleComplete = (id) => {
-    setTasks(tasks.map(task => task.id === id ? {...task, completed: !task.completed} : task));
+  const toggleTask = async (id, completed) => {
+    try {
+      await fetch(`${API_URL}/tasks/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed }),
+      });
+      setTasks((prev) =>
+        prev.map((task) => (task.id === id ? { ...task, completed } : task))
+      );
+    } catch (err) {
+      console.error("Error updating task:", err);
+    }
   };
 
-  // Delete task
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
-  };
-
-  // Open edit modal
-  const openEditModal = (task) => {
-    setSelectedTask(task);
-    setIsModalOpen(true);
-  };
-
-  // Save edited task
-  const saveTask = (id, newText) => {
-    setTasks(tasks.map(task => task.id === id ? {...task, text: newText} : task));
-    closeModal();
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedTask(null);
+  const deleteTask = async (id) => {
+    try {
+      await fetch(`${API_URL}/tasks/${id}`, { method: "DELETE" });
+      setTasks((prev) => prev.filter((task) => task.id !== id));
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
   };
 
   return (
     <div className="app">
-      <Header />
-      <TaskInput onAddTask={addTask} />
-      <TaskList 
-        tasks={tasks} 
-        onToggleComplete={toggleComplete} 
-        onDeleteTask={deleteTask} 
-        onEditTask={openEditModal} 
-      />
-      <Footer 
-        totalTasks={tasks.length} 
-        completedTasks={tasks.filter(task => task.completed).length} 
-      />
-
-      {isModalOpen && selectedTask && (
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <h3>Edit Task</h3>
-          <TaskInput
-            onAddTask={(text) => saveTask(selectedTask.id, text)}
-          />
-        </Modal>
-      )}
+      <h1>My To-Do App</h1>
+      <TaskInput addTask={addTask} />
+      <TaskList tasks={tasks} toggleTask={toggleTask} deleteTask={deleteTask} />
     </div>
   );
 }
