@@ -7,39 +7,29 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="todo-container">
-    <h1>To-Do App</h1>
+  <div class="app">
+    <header>
+      <h1>To-Do App</h1>
+    </header>
 
-    <div class="input-section">
+    <!-- Task Input -->
+    <div class="task-input">
       <input type="text" id="taskInput" placeholder="Input task here..." />
       <button id="addTaskBtn">Add Task</button>
     </div>
 
-    <div class="tasks-section">
-      <h2>Tasks:</h2>
-      <ul id="taskList">
-        <li>
-          <input type="checkbox" /> Task 1
-          <button class="delete-btn">Delete</button>
-          <button class="complete-btn">Complete</button>
-        </li>
-        <li class="completed">
-          <input type="checkbox" checked /> Task 2
-          <button class="delete-btn">Delete</button>
-          <button class="complete-btn">Complete</button>
-        </li>
-        <li>
-          <input type="checkbox" /> Task 3
-          <button class="delete-btn">Delete</button>
-          <button class="complete-btn">Complete</button>
-        </li>
-      </ul>
-    </div>
+    <!-- Task List -->
+    <ul class="task-list" id="taskList">
+      <!-- Tasks will appear here -->
+    </ul>
 
+    <!-- Footer -->
     <footer>
-      <p>Total Tasks: <span id="totalTasks">3</span></p>
-      <p>Completed: <span id="completedTasks">1</span></p>
+      <span id="totalTasks">Total Tasks: 0</span>
+      <span id="completedTasks">Completed: 0</span>
     </footer>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
