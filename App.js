@@ -3,15 +3,21 @@ import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import './styles.css';
 
-const API_URL = "http://localhost:5000"; // Change to Render backend URL when deployed
+const API_URL = process.env.REACT_APP_API_URL;
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 function App() {
   const [tasks, setTasks] = useState([]);
 
+  // Fetch tasks on load
   useEffect(() => {
     async function fetchTasks() {
       try {
-        const res = await fetch(`${API_URL}/tasks`);
+        const res = await fetch(`${API_URL}/tasks`, {
+          headers: {
+            'x-api-key': API_KEY
+          }
+        });
         const data = await res.json();
         setTasks(data);
       } catch (err) {
@@ -21,11 +27,15 @@ function App() {
     fetchTasks();
   }, []);
 
+  // Add new task
   const addTask = async (text) => {
     try {
       const res = await fetch(`${API_URL}/tasks`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-api-key": API_KEY
+        },
         body: JSON.stringify({ text }),
       });
       const newTask = await res.json();
@@ -35,11 +45,15 @@ function App() {
     }
   };
 
+  // Toggle completed
   const toggleTask = async (id, completed) => {
     try {
       await fetch(`${API_URL}/tasks/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "x-api-key": API_KEY
+        },
         body: JSON.stringify({ completed }),
       });
       setTasks((prev) =>
@@ -50,9 +64,13 @@ function App() {
     }
   };
 
+  // Delete task
   const deleteTask = async (id) => {
     try {
-      await fetch(`${API_URL}/tasks/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}/tasks/${id}`, { 
+        method: "DELETE",
+        headers: { "x-api-key": API_KEY }
+      });
       setTasks((prev) => prev.filter((task) => task.id !== id));
     } catch (err) {
       console.error("Error deleting task:", err);

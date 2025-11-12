@@ -14,17 +14,29 @@ const PORT = process.env.PORT || 5000;
 
 // --- Middleware ---
 app.use(helmet()); // Security headers
-app.use(cors({ origin: 'http://localhost:3000' })); // Change to Render URL when live
+app.use(cors({ origin: 'http://localhost:3000' })); // Change to frontend URL when deployed
 app.use(bodyParser.json());
 app.use(morgan('combined')); // Logging
 
 // Rate limiter
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 50,
+  max: 50, // max 50 requests per IP per minute
   message: "Too many requests, please try again later."
 });
 app.use(limiter);
+
+// --- Authentication Middleware ---
+function authenticate(req, res, next) {
+  const apiKey = req.headers['x-api-key'];
+  const VALID_KEY = process.env.API_KEY || 'my-secret-key';
+
+  if (apiKey && apiKey === VALID_KEY) {
+    next();
+  } else {
+    res.status(401).json({ error: 'Unauthorized: Invalid API Key' });
+  }
+}
 
 // --- Database setup ---
 const DB_PATH = path.join(__dirname, 'data', 'todo.db');
@@ -46,7 +58,7 @@ db.run(`
 
 // --- Routes ---
 
-// GET /tasks → fetch all tasks
+// GET /tasks → fetch all tasks (optional: keep public)
 app.get('/tasks', (req, res, next) => {
   db.all('SELECT * FROM tasks ORDER BY createdAt DESC', [], (err, rows) => {
     if (err) return next(err);
@@ -54,8 +66,8 @@ app.get('/tasks', (req, res, next) => {
   });
 });
 
-// POST /tasks → add a new task
-app.post('/tasks', (req, res, next) => {
+// POST /tasks → add a new task (protected)
+app.post('/tasks', authenticate, (req, res, next) => {
   let { text } = req.body;
 
   // Validate and sanitize input
@@ -74,8 +86,8 @@ app.post('/tasks', (req, res, next) => {
   });
 });
 
-// PUT /tasks/:id → toggle/update a task
-app.put('/tasks/:id', (req, res, next) => {
+// PUT /tasks/:id → toggle/update a task (protected)
+app.put('/tasks/:id', authenticate, (req, res, next) => {
   const { id } = req.params;
   const { completed } = req.body;
 
@@ -90,8 +102,8 @@ app.put('/tasks/:id', (req, res, next) => {
   });
 });
 
-// DELETE /tasks/:id → delete a task
-app.delete('/tasks/:id', (req, res, next) => {
+// DELETE /tasks/:id → delete a task (protected)
+app.delete('/tasks/:id', authenticate, (req, res, next) => {
   const { id } = req.params;
   const query = 'DELETE FROM tasks WHERE id = ?';
   db.run(query, [id], function(err) {
