@@ -4,31 +4,33 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #eaf2f8;
   margin: 0;
-}
-
-/* General App Container */
-.app {
-  max-width: 400px;
-  width: 100%;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  padding: 20px;
+  background-color: #eaf2f8;
   font-family: Arial, sans-serif;
 }
 
-/* Header */
-header h1 {
+/* App container */
+.app {
+  max-width: 500px;
+  width: 100%;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 20px 30px;
   text-align: center;
+}
+
+/* Header */
+.app h1 {
   color: #007BFF;
   margin-bottom: 20px;
+  font-size: 28px;
 }
 
 /* Task Input */
 .task-input {
   display: flex;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -38,114 +40,10 @@ header h1 {
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .task-input button {
-  padding: 10px 20px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.task-input button:hover {
-  background-color: #0056b3;
-}
-
-/* Task List */
-.task-list {
-  list-style: none; /* removes bullet points */
-  padding: 0;
-  margin: 0;
-}
-
-/* Task Item */
-.task {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.task span {
-  flex: 1;
-  margin-left: 10px;
-}
-
-.task-buttons button {
-  margin-left: 5px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.task-buttons button:first-child {
-  background-color: #28a745;
-  color: #fff;
-}
-
-.task-buttons button:first-child:hover {
-  background-color: #218838;
-}
-
-.task-buttons button:last-child {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.task-buttons button:last-child:hover {
-  background-color: #b02a37;
-}
-
-/* Footer */
-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-/* General App Container */
-.app {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px 30px;
-  background-color: #f5f5f5;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  font-family: Arial, sans-serif;
-  text-align: center;
-}
-
-/* Header */
-.app h1 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 28px;
-}
-
-/* Task Input */
-form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-input[type="text"] {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-button {
   padding: 10px 15px;
   border: none;
   border-radius: 8px;
@@ -156,17 +54,18 @@ button {
   transition: background-color 0.2s ease;
 }
 
-button:hover {
+.task-input button:hover {
   background-color: #45a049;
 }
 
 /* Task List */
-ul {
-  list-style-type: none;
+.task-list {
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-li {
+.task {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -177,16 +76,47 @@ li {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-li input[type="checkbox"] {
+.task input[type="checkbox"] {
   margin-right: 10px;
   transform: scale(1.2);
 }
 
-li button {
-  background-color: #f44336;
-  margin-left: 10px;
+.task span {
+  flex: 1;
 }
 
-li button:hover {
-  background-color: #e53935;
+/* Task Buttons */
+.task-buttons button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-buttons .complete-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.task-buttons .complete-btn:hover {
+  background-color: #218838;
+}
+
+.task-buttons .delete-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.task-buttons .delete-btn:hover {
+  background-color: #b02a37;
+}
+
+/* Footer */
+footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
 }
