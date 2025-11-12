@@ -1,54 +1,88 @@
-const input = document.getElementById("taskInput");
-const addBtn = document.getElementById("addTaskBtn");
+const addTaskBtn = document.getElementById("addTaskBtn");
+const taskInput = document.getElementById("taskInput");
 const taskList = document.getElementById("taskList");
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
 
-let total = 0;
-let completed = 0;
+// Pre-filled example tasks
+let tasks = [
+  { text: "Task 1", completed: false },
+  { text: "Task 2", completed: true },
+  { text: "Task 3", completed: false },
+  { text: "Task 4", completed: false },
+  { text: "Task 5", completed: false },
+  { text: "Task 6", completed: false },
+  { text: "Task 7", completed: false },
+  { text: "Task 8", completed: false }
+];
 
-addBtn.addEventListener("click", () => {
-  const taskText = input.value.trim();
-  if (!taskText) return alert("Please enter a task!");
-  total++;
+function updateCounts() {
+  const total = tasks.length;
+  const completed = tasks.filter((t) => t.completed).length;
+  totalTasks.textContent = `Total Tasks: ${total}`;
+  completedTasks.textContent = `Completed Tasks: ${completed}`;
+}
 
-  const li = document.createElement("li");
-  li.className = "task";
-  li.innerHTML = `
-    <input type="checkbox" />
-    <span>${taskText}</span>
-    <div class="task-buttons">
-      <button class="complete-btn">Complete</button>
-      <button class="delete-btn">Delete</button>
-    </div>
-  `;
+function renderTasks() {
+  taskList.innerHTML = "";
+  tasks.forEach((task, index) => {
+    const li = document.createElement("li");
 
-  taskList.appendChild(li);
-  input.value = "";
-  updateFooter();
+    const taskLeft = document.createElement("div");
+    taskLeft.className = "task-left";
 
-  li.querySelector(".delete-btn").addEventListener("click", () => {
-    if (li.querySelector("input").checked) completed--;
-    li.remove();
-    total--;
-    updateFooter();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = task.completed;
+    checkbox.addEventListener("change", () => {
+      task.completed = checkbox.checked;
+      renderTasks();
+    });
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = task.text;
+    if (task.completed) textSpan.classList.add("completed");
+
+    taskLeft.appendChild(checkbox);
+    taskLeft.appendChild(textSpan);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.className = "delete-btn";
+    deleteBtn.onclick = () => {
+      tasks.splice(index, 1);
+      renderTasks();
+    };
+
+    const completeBtn = document.createElement("button");
+    completeBtn.textContent = "Complete";
+    completeBtn.className = "complete-btn";
+    completeBtn.onclick = () => {
+      task.completed = true;
+      renderTasks();
+    };
+
+    li.appendChild(taskLeft);
+    li.appendChild(deleteBtn);
+    li.appendChild(completeBtn);
+
+    taskList.appendChild(li);
   });
 
-  li.querySelector("input").addEventListener("change", (e) => {
-    if (e.target.checked) completed++;
-    else completed--;
-    updateFooter();
-  });
+  updateCounts();
+}
 
-  li.querySelector(".complete-btn").addEventListener("click", () => {
-    li.querySelector("input").checked = true;
-    li.querySelector("span").style.textDecoration = "line-through";
-    completed++;
-    updateFooter();
-  });
+addTaskBtn.addEventListener("click", () => {
+  const text = taskInput.value.trim();
+  if (text !== "") {
+    tasks.push({ text, completed: false });
+    taskInput.value = "";
+    renderTasks();
+  }
 });
 
-function updateFooter() {
-  totalTasks.textContent = `Total Tasks: ${total}`;
-  completedTasks.textContent = `Completed: ${completed}`;
-}
+taskInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addTaskBtn.click();
+});
+
+renderTasks();
