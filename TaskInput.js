@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import DOMPurify from "dompurify";
 
-function TaskInput({ onAddTask }) {
-  const [inputValue, setInputValue] = useState('');
+function TaskInput({ addTask }) {
+  const [text, setText] = useState("");
 
-  const handleAdd = () => {
-    if (inputValue.trim() !== '') {
-      onAddTask(inputValue);
-      setInputValue('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Trim and check for empty string
+    let sanitizedText = text.trim();
+    if (sanitizedText === "") return;
+
+    // Sanitize input to remove any HTML/JS
+    sanitizedText = DOMPurify.sanitize(sanitizedText, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+
+    // Limit length
+    if (sanitizedText.length > 200) {
+      alert("Task cannot exceed 200 characters.");
+      return;
     }
+
+    addTask(sanitizedText);
+    setText("");
   };
 
   return (
-    <div className="task-input">
-      <input 
-        type="text" 
-        placeholder="Input Task Here" 
-        value={inputValue} 
-        onChange={(e) => setInputValue(e.target.value)} 
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Add a new task"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
       />
-      <button onClick={handleAdd}>Add Task</button>
-    </div>
+      <button type="submit">Add Task</button>
+    </form>
   );
 }
 
