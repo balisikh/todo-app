@@ -1,5 +1,5 @@
+const taskForm = document.getElementById("taskForm");
 const input = document.getElementById("taskInput");
-const addBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
@@ -7,12 +7,10 @@ const completedTasks = document.getElementById("completedTasks");
 let total = 0;
 let completed = 0;
 
-// Add task when button clicked
-addBtn.addEventListener("click", addTask);
-
-// Also add when Enter key pressed
-input.addEventListener("keypress", function (e) {
-  if (e.key === "Enter") addTask();
+// Add task on form submit
+taskForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  addTask();
 });
 
 function addTask() {
@@ -35,20 +33,29 @@ function addTask() {
   input.value = "";
   updateFooter();
 
+  const checkbox = li.querySelector("input[type='checkbox']");
+  const span = li.querySelector("span");
+
   // Checkbox logic
-  const checkbox = li.querySelector("input");
   checkbox.addEventListener("change", (e) => {
-    if (e.target.checked) completed++;
-    else completed--;
+    if (e.target.checked) {
+      span.style.textDecoration = "line-through";
+      completed++;
+    } else {
+      span.style.textDecoration = "none";
+      completed--;
+    }
     updateFooter();
   });
 
   // Complete button
   li.querySelector(".complete-btn").addEventListener("click", () => {
-    checkbox.checked = true;
-    li.querySelector("span").style.textDecoration = "line-through";
-    completed++;
-    updateFooter();
+    if (!checkbox.checked) {
+      checkbox.checked = true;
+      span.style.textDecoration = "line-through";
+      completed++;
+      updateFooter();
+    }
   });
 
   // Delete button
